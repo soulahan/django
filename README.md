@@ -7,3 +7,4 @@ django实战
 4.session会话
 5.注册视图
 6.邮箱注册确认
+7.send-mail.py与项目无关,为邮箱测试代码
