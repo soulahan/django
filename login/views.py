@@ -2,11 +2,13 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
+from django.http import HttpResponse
 from . import models
 from . import forms
 import hashlib
 import datetime
 # Create your views here.
+
 
 def hash_code(s,salt='Helloworld'):
     h = hashlib.sha256()
@@ -14,11 +16,13 @@ def hash_code(s,salt='Helloworld'):
     h.update(s.encode())
     return h.hexdigest()
 
+
 def make_confirm_string(user):
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     code = hash_code(user.name, now)
     models.ConfirmString.objects.create(code=code,user = user)
     return code
+
 
 def send_email(email, code):
     subject = '来自www.liujiangblog.com的注册确认邮件'
@@ -34,6 +38,7 @@ def send_email(email, code):
     msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_HOST_USER, [email])
     msg.attach_alternative(html_content, "text/html")
     msg.send()
+
 
 def user_confirm(request):
     code = request.GET.get('code',None)
@@ -55,11 +60,13 @@ def user_confirm(request):
         confirm.delete()
         message = '感谢确认，请使用账户登录！'
         return render(request, 'login/confirm.html', locals())
-    
+
+
 def index(request):
     if not request.session.get('is_login',None):
         return redirect('/login/')
     return render(request,'login/index.html')
+
 
 def login(request):
     if request.session.get('is_login',None):  # 不允许重复登录
@@ -95,6 +102,7 @@ def login(request):
     login_form = forms.UserForm()
     return render(request, 'login/login.html', locals())
 
+
 def register(request):
     if request.session.get('is_login', None):
         return redirect('/index/')
@@ -128,7 +136,6 @@ def register(request):
                 new_user.email = email
                 new_user.sex = sex
                 new_user.save()
-
                 code = make_confirm_string(new_user)
                 send_email(email, code)
                 return redirect('/login/')
@@ -137,8 +144,23 @@ def register(request):
     register_form = forms.RegisterForm()
     return render(request, 'login/register.html', locals())
 
+
 def logout(request):
     if not request.session.get('is_login',None):
         return redirect('/login/')
     request.session.flush()
     return redirect('/login/')
+
+
+def try_test(request):
+
+    return render(request, 'login/try_test.html')
+
+
+def try_get(request):
+    request.encoding = 'utf-8'
+    if 'q' in request.GET:
+        message = '你搜索的内容为：' + request.GET['q']
+    else:
+        message = '你提交了表单'
+    return HttpResponse(message)
