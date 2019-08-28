@@ -1,5 +1,5 @@
 from django.db import models
-
+import time
 # Create your models here.
 
 
@@ -14,6 +14,18 @@ class Trip(models.Model):
 
     def __str__(self):              # __unicode__ on Python 2
         return self.trip_title
+    def toDict(self):
+        #datatime时间不能直接发送，需要先转成时间戳再格式化为字典
+        tmstp = int(time.mktime(self.pub_time.timetuple()))
+        return {
+        'trip_title':self.trip_title,
+        'trip_subtitle':self.trip_subtitle,
+        'cover':self.cover,
+        'place':self.place,
+        'likeCount':self.likeCount,
+        'pub_time' : tmstp,
+        'day_Count' : self.day_set.count() #获取Trip对应的日程数量
+        }
 
 
 class Day(models.Model):
