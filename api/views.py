@@ -1,6 +1,7 @@
+import json
 from django.shortcuts import render
 from django.http import HttpResponse
-
+from api.models import Trip
 # Create your views here.
 
 
@@ -9,7 +10,10 @@ def index(request):
 
 
 def tripList(request):
-    return HttpResponse("This is the view for tripList")
+    all_objs = Trip.objects.get(pk=1)
+    all_dicts = Trip.toDict(all_objs)
+    all_jsons = json.dumps(all_dicts)
+    return HttpResponse(all_jsons)
 
 
 def tripDetail(request, trip_id):

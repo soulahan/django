@@ -20,10 +20,14 @@ from login import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('index/',views.index),
-    path('login/',views.login),
-    path('register/',views.register),
-    path('logout/',views.logout),
-    path('captcha/',include('captcha.urls')),
-    path('confirm/',views.user_confirm),
+    # path('login/', include('login.urls')),
+    path('api/', include('api.urls')),
+    path('index/', views.index),
+    path('login/', views.login),
+    path('register/', views.register),
+    path('logout/', views.logout),
+    path('captcha/', include('captcha.urls')),
+    path('confirm/', views.user_confirm),
+    path('try_test/', views.try_test),
+    path('try_get/', views.try_get),
 ]

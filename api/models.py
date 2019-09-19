@@ -14,6 +14,8 @@ class Trip(models.Model):
 
     def __str__(self):              # __unicode__ on Python 2
         return self.trip_title
+
+
     def toDict(self):
         #datatime时间不能直接发送，需要先转成时间戳再格式化为字典
         tmstp = int(time.mktime(self.pub_time.timetuple()))
