@@ -8,3 +8,5 @@ django实战
 5.注册视图
 6.邮箱注册确认
 7.send-mail.py与项目无关,为邮箱测试代码
+验证码包     pip3 install django-simple-captcha 
+
